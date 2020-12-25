@@ -1,0 +1,106 @@
+body {
+  margin: 40px 100px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: hsl(24, 4%, 72%);
+  border: 2px black solid;
+  min-width: 670px;
+}
+
+* {
+  margin: 0;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+#root {
+  text-align: left;
+  min-width: 670px;
+}
+
+#root > div{
+  min-width: 670px;
+}
+
+/* 记录的内容 */
+.content {
+  display: flex;
+  margin: 5px 0;
+  padding-bottom: 10px;
+  height: 40px;
+  border-bottom: 1px solid black;
+}
+
+.isdo {
+  width: 10%;
+  height: 100%;
+  border: none;
+}
+
+.delete {
+  margin-left: 10px;
+}
+
+/* 记录的实际内容 */
+.text {
+  width: 80%;
+  word-break: normal;
+  resize: none;
+  font-size: 24px;
+  border: none;
+  text-align: left;
+}
+
+div {
+  text-align: center;
+}
+
+.add {
+  font-size: 24px;
+}
+
+.title{
+  font-weight: bolder;
+  text-align: left;
+  font-size: x-large;
+}
+
+#root div div {
+  padding: 10px;
+  background-color:white;
+}
+
+hr {
+  height: 5px;
+}
+
+/* 顶部添加框的样式 */
+.add_list {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
+.add_list > input {
+  font-size: 18px;
+}
+
+.add_list > input[type="text"]{
+  width: 60%;
+  margin: 0 20px;
+}
+
+/* 记录的时间 */
+.time {
+  text-align: left;
+  font-size: large;
+  font-weight: bold;
+  margin-left: 10px;
+  opacity: 0.7;
+}
