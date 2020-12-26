@@ -1,3 +1,4 @@
+import 'babel-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
@@ -9,7 +10,7 @@ class Record extends React.Component {
     this.valueChange = this.valueChange.bind(this);
     this.delete = this.delete.bind(this);
     this.notice = this.notice.bind(this);
-    this.last_value = "";
+    // this.last_value = "";
   }
 
   isdoChange(e) {
@@ -25,8 +26,7 @@ class Record extends React.Component {
     this.props.delete(this.props.index);
   }
 
-  /*失去焦点时触发的事件，修改记录的文本值
-    保存上一个的值，在为空的时候可供返回 */
+  /*失去焦点时触发的事件，删除记录 */
   notice(e) {
     if (e.target.value === "") {
       this.delete(this.props.index);
@@ -38,6 +38,12 @@ class Record extends React.Component {
       <React.Fragment>
         {this.props.adata.isdo ? 
           <p className="time">
+            <span>类别：
+              {this.props.adata.classify === "living" ? "生活" 
+              : this.props.adata.classify === "study" ? "学习"
+              : "工作"  
+              }&nbsp;&nbsp;
+            </span>
             <span>制定时间为:</span>
             {this.props.adata.date}
             &nbsp;&nbsp;---&nbsp;&nbsp;
@@ -46,6 +52,12 @@ class Record extends React.Component {
           </p>
           :
           <p className="time">
+            <span>类别：
+              {this.props.adata.classify === "living" ? "生活" 
+              : this.props.adata.classify === "study" ? "学习"
+              : "工作"  
+              }&nbsp;&nbsp;
+            </span>
             <span>制定时间为:</span>
             {this.props.adata.date}
           </p>
@@ -90,11 +102,21 @@ class RecordAdd extends React.Component {
     super(props);
     this.state = {
       "value": "",
-      "date": ""
+      "date": "",
+      "classify": "living"
     }
     this.dateChange = this.dateChange.bind(this);
     this.textChange = this.textChange.bind(this);
     this.addRecord = this.addRecord.bind(this);
+    this.classifyChange = this.classifyChange.bind(this);
+  }
+
+  classifyChange(e){
+    console.log(e.target.value);
+    const classify = e.target.value;
+    this.setState({
+      "classify": classify
+    })
   }
 
   addRecord(e) {
@@ -105,14 +127,16 @@ class RecordAdd extends React.Component {
     } else {
       const time = new Date();
       const date = this.state.date;
+      const classify = this.state.classify;
       const date_exact = "  " + 
                     ("0" + time.getHours()).slice(-2) + ":" +
                     ("0" + time.getMinutes()).slice(-2) + ":" +
                     ("0" + time.getSeconds()).slice(-2);
       const data = {
+        "classify": classify,
         "isdo": false,
         "value": value,
-        "date": date + date_exact
+        "date": date + date_exact,
       }
       this.setState({
         "value": ""
@@ -156,6 +180,11 @@ class RecordAdd extends React.Component {
           type="date"
           value={this.state.date}
           onChange={this.dateChange}/>
+        <select onChange={this.classifyChange}>
+          <option value="living">生活</option>
+          <option value="study">学习</option>
+          <option value="work">工作</option>
+        </select>
         <input 
           type="text"
           placeholder="制定你的计划......"
@@ -171,16 +200,43 @@ class RecordAdd extends React.Component {
   }
 }
 
+/* 分类选择的组件 */
+class Item extends React.Component {
+  // constructor(props) {
+  //   super(props);
+  // }
+
+  itemChange(e) {
+    console.log(this.props.classify);
+    const classify = this.props.classify;
+    this.props.classifyChange(classify);
+    console.log(e.parentNode);
+    e.target.id = "choosen";
+  }
+
+  render() {
+    return (
+      <span
+       className="items" id=""
+       onClick={this.itemChange.bind(this)}>
+         {this.props.itemName}
+      </span>
+    );
+  }
+}
+
 class ToDoList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      "alldata": []
+      "alldata": [],
+      "classify": ""
     };
     this.valueChange = this.valueChange.bind(this);
     this.addRecord = this.addRecord.bind(this);
     this.delete = this.delete.bind(this);
     this.isDo = this.isDo.bind(this);
+    this.classifyChange = this.classifyChange.bind(this);
   }
 
   /** 渲染后进行 */
@@ -261,10 +317,26 @@ class ToDoList extends React.Component {
     this.updataAlldata();
   }
 
+  classifyChange(e) {
+    console.log(e);
+    this.setState({
+      "classify": e
+    });
+  }
+
   render() {
     const alldata = this.state.alldata;
+    const classify = this.state.classify;
+    console.log(classify);
     return (
       <div>
+        {/* 遍历导航栏，附加index */}
+        <div className="chooses">
+            <Item classify="" itemName="全部" classifyChange={this.classifyChange}/>
+            <Item classify="living" itemName="生活" classifyChange={this.classifyChange}/>
+            <Item classify="study" itemName="学习" classifyChange={this.classifyChange}/>
+            <Item classify="work" itemName="工作" classifyChange={this.classifyChange}/>
+        </div>
         {/* 点击添加 */}
         <RecordAdd
           alldata={this.state.alldata}
@@ -273,8 +345,10 @@ class ToDoList extends React.Component {
         {/* 未做过的 */}
         <div>
           <p className="title">还没有做的事情：</p>
-          {alldata.map((item, index) => (
-            item.isdo ? console.log("no") :
+          {alldata.map((item, index) => {
+            if (classify === "") {
+              if (!item.isdo) {
+                return (
                 <div key={index}>
                   <Record
                     index={index}
@@ -282,26 +356,58 @@ class ToDoList extends React.Component {
                     valueChange={this.valueChange}
                     delete={this.delete}
                     isDo={this.isDo}/>
-                </div> 
-          ))}
+                </div>)
+              }
+            } else {
+              if (!item.isdo) {
+                if (classify === item.classify){
+                  return (<div key={index}>
+                      <Record
+                        index={index}
+                        adata={item}
+                        valueChange={this.valueChange}
+                        delete={this.delete}
+                        isDo={this.isDo}/>
+                    </div>)
+                }
+              }
+            }
+            return "";
+          })}
           
         </div>
         <hr></hr>
         {/* 已经做了 */}
         <div>
           <p className="title">已经做了的事情：</p>
-          {alldata.map((item, index) => (
-            item.isdo ? 
-              <div key={index}>
-                <Record
-                  index={index}
-                  adata={item}
-                  valueChange={this.valueChange}
-                  delete={this.delete}
-                  isDo={this.isDo}/>
-              </div> 
-              : console.log("done")
-          ))}
+          {alldata.map((item, index) => {
+            if (classify === "") {
+              if(item.isdo) {
+                return (<div key={index}>
+                  <Record
+                    index={index}
+                    adata={item}
+                    valueChange={this.valueChange}
+                    delete={this.delete}
+                    isDo={this.isDo}/>
+                </div> )
+              }
+            } else {
+              if(item.isdo) {
+                if (classify === item.classify) {
+                  return (<div key={index}>
+                    <Record
+                      index={index}
+                      adata={item}
+                      valueChange={this.valueChange}
+                      delete={this.delete}
+                      isDo={this.isDo}/>
+                  </div> )
+                }
+              }
+            }
+            return "";
+            })}
         </div>
       </div>
     );
