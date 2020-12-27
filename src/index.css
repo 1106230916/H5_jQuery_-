@@ -128,15 +128,17 @@ hr {
   border-left: none;
 }
 
-#root > div > .chooses > span{
+#root > div > .chooses > .items{
   border-left: 1px solid black;
   width: 25%;
   height: 30px;
   font-weight: bolder;
+  background-color: white;
+  color: black;
   font-size: 20px;
 }
 
-#root > div > .chooses > span[id="choosen"] {
+#root > div > .chooses > .activity {
   background-color: black;
   color: white;
 }

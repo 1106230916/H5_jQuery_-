@@ -200,37 +200,12 @@ class RecordAdd extends React.Component {
   }
 }
 
-/* 分类选择的组件 */
-class Item extends React.Component {
-  // constructor(props) {
-  //   super(props);
-  // }
-
-  itemChange(e) {
-    console.log(this.props.classify);
-    const classify = this.props.classify;
-    this.props.classifyChange(classify);
-    console.log(e.parentNode);
-    e.target.id = "choosen";
-  }
-
-  render() {
-    return (
-      <span
-       className="items" id=""
-       onClick={this.itemChange.bind(this)}>
-         {this.props.itemName}
-      </span>
-    );
-  }
-}
-
 class ToDoList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       "alldata": [],
-      "classify": ""
+      "classify": "",
     };
     this.valueChange = this.valueChange.bind(this);
     this.addRecord = this.addRecord.bind(this);
@@ -320,7 +295,7 @@ class ToDoList extends React.Component {
   classifyChange(e) {
     console.log(e);
     this.setState({
-      "classify": e
+      "classify": e,
     });
   }
 
@@ -332,10 +307,26 @@ class ToDoList extends React.Component {
       <div>
         {/* 遍历导航栏，附加index */}
         <div className="chooses">
-            <Item classify="" itemName="全部" classifyChange={this.classifyChange}/>
-            <Item classify="living" itemName="生活" classifyChange={this.classifyChange}/>
-            <Item classify="study" itemName="学习" classifyChange={this.classifyChange}/>
-            <Item classify="work" itemName="工作" classifyChange={this.classifyChange}/>
+        <span
+          className={classify === "" ? "items activity" : "items"} 
+          onClick={this.classifyChange.bind(this, "")}>
+            全部
+        </span>
+        <span
+          className={classify === "living" ? "items activity" : "items"} 
+          onClick={this.classifyChange.bind(this, "living")}>
+            生活
+        </span>
+        <span
+          className={classify === "study" ? "items activity" : "items"} 
+          onClick={this.classifyChange.bind(this, "study")}>
+            学习
+        </span>
+        <span
+          className={classify === "work" ? "items activity" : "items"} 
+          onClick={this.classifyChange.bind(this, "work")}>
+            工作
+        </span>
         </div>
         {/* 点击添加 */}
         <RecordAdd
