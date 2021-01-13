@@ -2,6 +2,10 @@ import 'babel-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import { printSome } from "import_test.js";
+
+/* 测试一下import */
+console.log(printSome());
 
 class Record extends React.Component {
   constructor(props) {
@@ -305,7 +309,7 @@ class ToDoList extends React.Component {
     console.log(classify);
     return (
       <div>
-        {/* 遍历导航栏，附加index */}
+        {/* 导航栏，点击后会切换黑底白字，以及分类切换 */}
         <div className="chooses">
         <span
           className={classify === "" ? "items activity" : "items"} 
