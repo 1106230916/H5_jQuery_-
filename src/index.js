@@ -2,10 +2,6 @@ import 'babel-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import { printSome } from "import_test.js";
-
-/* 测试一下import */
-console.log(printSome());
 
 class Record extends React.Component {
   constructor(props) {
